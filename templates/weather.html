@@ -1,6 +1,20 @@
 <!doctype html>
-<html>
-<head><title>Weather Dashboard</title></head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f0f4f8; color: #333; display: flex; align-items: center; flex-direction: column; }
+        h1 { color: #4a90e2; }
+        form { margin: 20px 0; }
+        input[type="text"] { padding: 10px; border: 1px solid #ddd; border-radius: 5px; width: 250px; }
+        button { padding: 10px 20px; background-color: #4a90e2; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
+        .error { color: red; }
+        .graph-container { margin-top: 20px; }
+        img { max-width: 100%; height: auto; }
+    </style>
+</head>
 <body>
     <h1>Weather Dashboard</h1>
     <form method="POST" action="/">
@@ -9,11 +23,27 @@
     </form>
     {% if weather_data %}
         {% if weather_data.error %}
-            <p>{{ weather_data.error }}</p>
+            <p class="error">{{ weather_data.error }}</p>
         {% else %}
-            <p>Temperature: {{ weather_data.temperature }}°C</p>
-            <p>Wind Speed: {{ weather_data.windspeed }} km/h</p>
-            <p>Weather Status: {{ weather_data.weathercode }}</p>
+            <h2>Weather Forecast for {{ request.form['city'] }}</h2>
+            <div class="graph-container">
+                {% if graph_filenames.temperature %}
+                    <h3>Temperature Forecast</h3>
+                    <img src="{{ url_for('static', filename='temperature_plot.png') }}" alt="Temperature Forecast Graph">
+                {% endif %}
+                {% if graph_filenames.humidity %}
+                    <h3>Humidity Forecast</h3>
+                    <img src="{{ url_for('static', filename='humidity_plot.png') }}" alt="Humidity Forecast Graph">
+                {% endif %}
+                {% if graph_filenames.dew_point %}
+                    <h3>Dew Point Forecast</h3>
+                    <img src="{{ url_for('static', filename='dew_point_plot.png') }}" alt="Dew Point Forecast Graph">
+                {% endif %}
+                {% if graph_filenames.rain %}
+                    <h3>Rain Forecast</h3>
+                    <img src="{{ url_for('static', filename='rain_plot.png') }}" alt="Rain Forecast Graph">
+                {% endif %}
+            </div>
         {% endif %}
     {% endif %}
 </body>
